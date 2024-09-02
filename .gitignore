@@ -1,6 +1,14 @@
 # Compiled class file
 *.class
 
+HARExtract
+.DS_Store
+.classpath
+.idea
+.project
+.settings
+
+
 # Log file
 *.log
 
