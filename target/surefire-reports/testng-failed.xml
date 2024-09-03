@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite parallel="tests" name="Failed suite [Suite]" guice-stage="DEVELOPMENT" verbose="0">
+  <test thread-count="5" parallel="tests" name="Test4(failed)" verbose="0">
+    <parameter name="scriptKey" value="PUBLIC:PerfTest_S01_NowMobileESC_UxAnalysis_12thJuly.xml"/>
+    <parameter name="DUT" value="00008130-000671280ED2001C"/>
+    <parameter name="deviceModel" value="iPhone_15_Pro_Max"/>
+    <parameter name="testName" value="ServiceNowApp_PerfTest"/>
+    <classes>
+      <class name="SplunkIntegration.InteractiveSplunkDashboard">
+        <methods>
+          <include name="beforeClass"/>
+          <include name="beforeTest"/>
+          <include name="afterClass"/>
+          <include name="afterTest"/>
+          <include name="updateSplunkDashboard"/>
+        </methods>
+      </class> <!-- SplunkIntegration.InteractiveSplunkDashboard -->
+    </classes>
+  </test> <!-- Test4(failed) -->
+</suite> <!-- Failed suite [Suite] -->

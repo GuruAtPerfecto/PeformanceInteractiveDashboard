@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Suite" parallel="tests">
+
+  <test thread-count="5" name="Test1" enabled="true">
+    <parameter name="DUT" value="00008120-0006646E3AE0A01E"></parameter>
+    <parameter name="scriptKey" value="PUBLIC:MSN_Script_Analysis.xml"></parameter>
+    <parameter name="testName" value="MSN_Script_Analysis"></parameter>
+    <parameter name="deviceModel" value="iPhone_15"></parameter>
+    <parameter name="executeTest" value="false"></parameter>
+    <parameter name="e_Id" value="guruswamy.bm@perfectomobile.com_MSN_Script_Analysis_24-09-01_18_07_34_623"></parameter>
+    <classes>
+      <class name="SplunkIntegration.InteractiveSplunkDashboard"/>
+    </classes>
+  </test>
+
+  <test thread-count="5" name="Test2" enabled="false">
+    <parameter name="DUT" value="00008120-001934890C38A01E"></parameter>
+    <parameter name="scriptKey" value="PUBLIC:PerfTest_S01_NowMobileESC_UxAnalysis_12thJuly.xml"></parameter>
+    <parameter name="testName" value="ServiceNowApp_PerfTest"></parameter>
+    <parameter name="deviceModel" value="iPhone_15"></parameter>
+    <parameter name="executeTest" value="false"></parameter>
+<!--    <parameter name="e_Id" value="guruswamy.bm@perfectomobile.com_PerfTest_S01_NowMobileESC_UxAnalysis_12thJuly_24-07-14_13_57_56_5055"></parameter>-->
+    <classes>
+      <class name="SplunkIntegration.InteractiveSplunkDashboard"/>
+    </classes>
+  </test>
+
+  <test thread-count="5" name="Test3" enabled="false">
+    <parameter name="DUT" value="00008130-000C545E0A92001C"></parameter>
+    <parameter name="scriptKey" value="PUBLIC:PerfTest_S01_NowMobileESC_UxAnalysis_12thJuly.xml"></parameter>
+    <parameter name="testName" value="ServiceNowApp_PerfTest"></parameter>
+    <parameter name="deviceModel" value="iPhone_15_Pro"></parameter>
+    <parameter name="executeTest" value="false"></parameter>
+
+    <!--    <parameter name="e_Id" value="vishwesh.aakula@servicenow.com_PerfTest_S01_NowMobileESC_UxAnalysis_12thJuly_24-07-25_15_51_42_1592"></parameter>-->
+    <classes>
+      <class name="SplunkIntegration.InteractiveSplunkDashboard"/>
+    </classes>
+  </test>
+
+  <test thread-count="5" name="Test4" enabled="false">
+    <parameter name="DUT" value="00008130-000671280ED2001C"></parameter>
+    <parameter name="scriptKey" value="PUBLIC:PerfTest_S01_NowMobileESC_UxAnalysis_12thJuly.xml"></parameter>
+    <parameter name="testName" value="ServiceNowApp_PerfTest"></parameter>
+    <parameter name="deviceModel" value="iPhone_15_Pro_Max"></parameter>
+    <parameter name="executeTest" value="false"></parameter>
+
+    <!--    <parameter name="e_Id" value="vishwesh.aakula@servicenow.com_PerfTest_S01_NowMobileESC_UxAnalysis_12thJuly_24-07-25_15_51_42_1590"></parameter>-->
+    <classes>
+      <class name="SplunkIntegration.InteractiveSplunkDashboard"/>
+    </classes>
+  </test>
+
+</suite> <!-- Suite -->

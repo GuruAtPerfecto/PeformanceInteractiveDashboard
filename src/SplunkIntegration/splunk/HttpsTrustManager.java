@@ -1,0 +1,68 @@
+package SplunkIntegration.splunk;
+
+
+import javax.net.ssl.*;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+
+/**
+ * @author hendrawd on 6/29/16
+ */
+public class HttpsTrustManager implements X509TrustManager {
+
+    private static TrustManager[] trustManagers;
+    private static final X509Certificate[] _AcceptedIssuers = new X509Certificate[]{};
+
+    @Override
+    public void checkClientTrusted(X509Certificate[] x509Certificates, String s)
+            throws java.security.cert.CertificateException {
+    }
+
+    @Override
+    public void checkServerTrusted(X509Certificate[] x509Certificates, String s)
+            throws java.security.cert.CertificateException {
+    }
+
+    public boolean isClientTrusted(X509Certificate[] chain) {
+        return true;
+    }
+
+    public boolean isServerTrusted(X509Certificate[] chain) {
+        return true;
+    }
+
+    @Override
+    public X509Certificate[] getAcceptedIssuers() {
+        return _AcceptedIssuers;
+    }
+
+    /**
+     * it's not safe for production phase, because it will allow all SSL certificate
+     * although the SSL certificate is not valid 
+     */
+    public static void allowAllSSL() {
+        HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+            @Override
+            public boolean verify(String arg0, SSLSession arg1) {
+                return true;
+            }
+        });
+
+        SSLContext context = null;
+        if (trustManagers == null) {
+            trustManagers = new TrustManager[]{new HttpsTrustManager()};
+        }
+
+        try {
+            context = SSLContext.getInstance("TLS");
+            context.init(null, trustManagers, new SecureRandom());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
+        HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
+    }
+}

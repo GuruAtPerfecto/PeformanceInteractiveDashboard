@@ -1,0 +1,245 @@
+package SplunkIntegration.splunk;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.Proxy;
+import java.net.URL;
+import java.net.UnknownHostException;
+
+//Class used to connect to SplunkIntegration.splunk and submit the values to the index
+public class SplunkConnect {
+
+	private String splunkScheme;
+	private String splunkHost;
+	private String splunkPort;
+	private String splunkToken;
+	private String splunkChannel;
+	private Proxy proxy = null;
+
+	private final String UTF_8 = "UTF-8";
+
+	public enum availableSchemes {
+		http, https
+	}
+
+	public String getSplunkHost() {
+		return splunkHost;
+	}
+
+	public void setSplunkHost(String splunkHost) {
+		this.splunkHost = splunkHost;
+	}
+
+	public String getSplunkScheme() {
+		return splunkScheme;
+	}
+
+	public void setSplunkScheme(String splunkScheme) {
+		this.splunkScheme = splunkScheme;
+	}
+
+	public void setSplunkChannel(String splunkChannel) {
+		this.splunkChannel = splunkChannel;
+	}
+
+	public String getSplunkChannel() {
+		return splunkChannel;
+	}
+
+	public String getSplunkPort() {
+		return splunkPort;
+	}
+
+	public void setSplunkPort(String splunkPort) {
+		this.splunkPort = splunkPort;
+	}
+
+	public String getSplunkToken() {
+		return splunkToken;
+	}
+
+	public void setSplunkToken(String splunkToken) {
+		this.splunkToken = splunkToken;
+	}
+
+	// Set the SplunkIntegration.splunk instance connection values
+	public SplunkConnect(String splunkScheme, String splunkHost, String splunkPort, String splunkToken) {
+		this.splunkScheme = splunkScheme;
+		this.splunkHost = splunkHost;
+		this.splunkPort = splunkPort;
+		this.splunkToken = splunkToken;
+	}
+
+	// Set the SplunkIntegration.splunk instance connection values
+	public SplunkConnect(String splunkScheme, String splunkHost, String splunkPort, String splunkToken, Proxy proxy) {
+		this.splunkScheme = splunkScheme;
+		this.splunkHost = splunkHost;
+		this.splunkPort = splunkPort;
+		this.splunkToken = splunkToken;
+		this.proxy = proxy;
+	}
+
+	// Set the SplunkIntegration.splunk instance connection values
+	public SplunkConnect(String splunkScheme, String splunkHost, String splunkPort, String splunkToken,
+			String splunkChannel) {
+		this.splunkScheme = splunkScheme;
+		this.splunkHost = splunkHost;
+		this.splunkPort = splunkPort;
+		this.splunkToken = splunkToken;
+		this.splunkChannel = splunkChannel;
+	}
+
+	// Set the SplunkIntegration.splunk instance connection values
+	public SplunkConnect(String splunkScheme, String splunkHost, String splunkPort, String splunkToken,
+			String splunkChannel, Proxy proxy) {
+		this.splunkScheme = splunkScheme;
+		this.splunkHost = splunkHost;
+		this.splunkPort = splunkPort;
+		this.splunkToken = splunkToken;
+		this.splunkChannel = splunkChannel;
+		this.proxy = proxy;
+	}
+
+	public void main(String[] args) throws Exception {
+	}
+
+	public boolean isJSONValid(String jsonInString) {
+		try {
+			final ObjectMapper mapper = new ObjectMapper();
+			mapper.readTree(jsonInString);
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
+	}
+
+	public String splunkFeed(String value) throws Exception {
+
+		String certificatesTrustStorePath = "/Users/gbm/Library/Java/JavaVirtualMachines/liberica-11.0.14/lib/security/cacerts";
+		System.setProperty("javax.net.ssl.trustStore", certificatesTrustStorePath);
+
+
+
+		if (!isJSONValid(value)) {
+			throw new Exception("Invalid JSON String, please correct and try again");
+		}
+
+		URL obj;
+		if (splunkPort != null) {
+			obj = new URL(splunkScheme.toString() + "://" + splunkHost + ":" + splunkPort + "/services/collector");
+		} else {
+			obj = new URL(splunkScheme.toString() + "://" + splunkHost + "/services/collector");
+		}
+
+		try {
+			HttpURLConnection con = null;
+
+			HttpsTrustManager.allowAllSSL();
+
+			if (proxy != null) {
+				con = (HttpURLConnection) obj.openConnection(proxy);
+			} else {
+				con = (HttpURLConnection) obj.openConnection();
+			}
+			con.setRequestProperty("Content-Type", "application/json");
+			con.setDoOutput(true);
+
+		
+			con.setRequestProperty("Authorization", "Splunk " + splunkToken);
+			
+			if(splunkChannel != null)
+			{
+				con.setRequestProperty("X-Splunk-Request-Channel", splunkChannel);
+			}
+
+			con.setRequestMethod("POST");
+
+			OutputStreamWriter out = new OutputStreamWriter(con.getOutputStream());
+			out.write("{\"event\":" + value + "}");
+			out.close();
+
+			new InputStreamReader(con.getInputStream());
+
+			int responseCode = con.getResponseCode();
+			String response = "";
+			System.out.println(con.getResponseMessage());
+
+			if (responseCode > HttpURLConnection.HTTP_OK) {
+				handleError(con);
+			} else {
+				response = getStream(con);
+			}
+
+			System.out.println("\nSending 'GET' request to URL : " + obj.toURI());
+			System.out.println("Response Code : " + responseCode);
+			System.out.println("Response message: " + response.toString());
+
+			return response;
+		} catch (UnknownHostException ex) {
+			throw new Exception(ex.getMessage() + "\nHostname is invalid please correct and try again.");
+		} catch (Exception ex) {
+			if (ex.getMessage().contains("Unexpected end of file")) {
+				throw new Exception(ex.getMessage() + "\nMost likely cause is the scheme or the port number is wrong.");
+			}
+
+			if (ex.getMessage().contains("Connection timed out")) {
+				throw new Exception(ex.getMessage()
+						+ "\nMost likely cause is the scheme or the port number is wrong. You may also have firewall or a proxy blocking your attempt.");
+			}
+
+			if (ex.getMessage().contains("Server returned HTTP response code: 403")) {
+				throw new Exception(ex.getMessage()
+						+ "\nMost likely cause is invalid credentials or and invalid HTTP Event Collector Token");
+			}
+
+			throw ex;
+		}
+	}
+
+	private void handleError(HttpURLConnection connection) throws IOException {
+		String msg = "Failed to upload media.";
+		InputStream errorStream = connection.getErrorStream();
+		if (errorStream != null) {
+			InputStreamReader inputStreamReader = new InputStreamReader(errorStream, UTF_8);
+			BufferedReader bufferReader = new BufferedReader(inputStreamReader);
+			try {
+				StringBuilder builder = new StringBuilder();
+				String outputString;
+				while ((outputString = bufferReader.readLine()) != null) {
+					if (builder.length() != 0) {
+						builder.append("\n");
+					}
+					builder.append(outputString);
+				}
+				String response = builder.toString();
+				msg += "Response: " + response;
+			} finally {
+				bufferReader.close();
+			}
+		}
+		throw new RuntimeException(msg);
+	}
+
+	private String getStream(HttpURLConnection connection) throws IOException {
+		InputStream inputStream = connection.getInputStream();
+		InputStreamReader inputStreamReader = new InputStreamReader(inputStream, UTF_8);
+		BufferedReader bufferReader = new BufferedReader(inputStreamReader);
+		String response = "";
+		try {
+			StringBuilder builder = new StringBuilder();
+			String outputString;
+			while ((outputString = bufferReader.readLine()) != null) {
+				if (builder.length() != 0) {
+					builder.append("\n");
+				}
+				builder.append(outputString);
+			}
+			response = builder.toString();
+		} finally {
+			bufferReader.close();
+		}
+		return response;
+	}
+}

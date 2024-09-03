@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Suite" parallel="tests">
+
+  <test thread-count="5" name="Test1" enabled="true">
+    <parameter name="scriptKey" value="PUBLIC:DBankScriptLessTransactionwiseHAR.xml"></parameter>
+    <parameter name="DUT" value="00008030-00160D260280802E"></parameter>
+    <parameter name="deviceModel" value="iPhone_11_Pro"></parameter>
+    <parameter name="testName" value="DBankScriptlessMobileBlaze"></parameter>
+    <parameter name="appPath" value="PUBLIC:DBank1.ipa"></parameter>
+    <parameter name="backGroundAppNames" value="Messages,Calculator,Maps,Calendar,Safari"></parameter>
+    <parameter name="networkProfile" value="4g_lte_good"></parameter>
+<!--    <parameter name="e_Id" value="guruswamy.bm@perfectomobile.com_DBankScriptLessTransactionwiseHAR_24-07-08_17_51_37_6691"></parameter>-->
+    <classes>
+      <class name="SplunkIntegration.InteractiveSplunkDashboard"/>
+    </classes>
+  </test> <!-- Test -->
+
+
+  <test thread-count="5" name="Test2" enabled="true">
+    <parameter name="scriptKey" value="PUBLIC:DBankScriptLessTransactionwiseHAR.xml"></parameter>
+    <parameter name="DUT" value="00008110-001964461AEB801E"></parameter>
+    <parameter name="deviceModel" value="iPhone_13_Pro"></parameter>
+    <parameter name="testName" value="DBankScriptlessMobileBlaze"></parameter>
+    <parameter name="appPath" value="PUBLIC:DBank1.ipa"></parameter>
+    <parameter name="backGroundAppNames" value="Messages,Calculator,Maps,Calendar,Safari"></parameter>
+    <parameter name="networkProfile" value="4g_lte_good"></parameter>
+<!--    <parameter name="e_Id" value="guruswamy.bm@perfectomobile.com_DBankScriptLessTransactionwiseHAR_24-07-27_08_34_52_1367"></parameter>-->
+    <classes>
+      <class name="SplunkIntegration.InteractiveSplunkDashboard"/>
+    </classes>
+  </test> <!-- Test -->
+
+
+  <test thread-count="5" name="Test3" enabled="true">
+    <parameter name="scriptKey" value="PUBLIC:DBankScriptLessTransactionwiseHAR.xml"></parameter>
+    <parameter name="DUT" value="00008030-000354201A50802E"></parameter>
+    <parameter name="deviceModel" value="iPhone_11_Pro_Max"></parameter>
+    <parameter name="testName" value="DBankScriptlessMobileBlaze"></parameter>
+    <parameter name="appPath" value="PUBLIC:DBank1.ipa"></parameter>
+    <parameter name="backGroundAppNames" value="Messages,Calculator,Maps,Calendar,Safari"></parameter>
+    <parameter name="networkProfile" value="4g_lte_good"></parameter>
+<!--    <parameter name="e_Id" value="guruswamy.bm@perfectomobile.com_DBankScriptLessTransactionwiseHAR_24-07-27_08_34_52_1369"></parameter>-->
+    <classes>
+      <class name="SplunkIntegration.InteractiveSplunkDashboard"/>
+    </classes>
+  </test> <!-- Test -->
+
+</suite> <!-- Suite -->
